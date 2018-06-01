@@ -49,4 +49,17 @@ public class Person {
     public void setAddress(String address) {
         this.address = address;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o == this) {
+            return true;
+        }
+        if(name.equals(this.name) && birthday.equals(this.birthday) && mothersName.equals(this.mothersName)
+                && address.equals(this.address)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
