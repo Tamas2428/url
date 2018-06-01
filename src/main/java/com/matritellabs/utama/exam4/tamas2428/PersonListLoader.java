@@ -1,6 +1,7 @@
 package com.matritellabs.utama.exam4.tamas2428;
 
 import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -10,8 +11,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-
+/**
+ * This class ment to read, and write files about Persons through URL address.
+ */
 public class PersonListLoader {
 
     /**
@@ -27,11 +32,12 @@ public class PersonListLoader {
             URL fileAddress = new URL(fileURL);
             BufferedReader fileContentIn = new BufferedReader(new InputStreamReader(fileAddress.openStream()));
 
-            //NOT WORKS!!!!
-            /*//Throw a java.io.FileNotFoundException if the file cannot be found!
-            if(fileContentIn.equals(null)) {
+            //Throw a java.io.FileNotFoundException if the file cannot be found!
+            HttpURLConnection con = (HttpURLConnection)(fileAddress).openConnection();
+            //in case of no response, getResponseCode() returns -1, when we throw the exception
+            if(con.getResponseCode() == -1) {
                 throw new FileNotFoundException();
-            }*/
+            }
 
             if(fileFormat.equals(PersonFileFormat.ONE_DATA_PER_LINE)) {
                 //temporary String to avoid any skip due to multiple calls in 1 cycle
@@ -39,7 +45,7 @@ public class PersonListLoader {
                 //Iterator for String array index, and the String array, to store data about the person
                 int iteratorForArrayIndex = 0;
                 String[] personDataArrayForOneDataLine = new String[iteratorForArrayIndex+3];
-                while((tempLineForOneDataLine = fileContentIn.readLine()) != null || iteratorForArrayIndex % 4 == 0) {
+                while((tempLineForOneDataLine = fileContentIn.readLine()) != null || iteratorForArrayIndex % iteratorForArrayIndex+4 == 0) {
                     personDataArrayForOneDataLine[iteratorForArrayIndex] = tempLineForOneDataLine;
                     iteratorForArrayIndex++;
                 }
@@ -63,6 +69,18 @@ public class PersonListLoader {
                 }
                 //temporary String which need to be splitted
                 String tempLineForCSV = fileContentIn.readLine();
+                //check how many ';' are there
+                Pattern semmicolonCheckLine = Pattern.compile(";");
+                Matcher matcher = semmicolonCheckLine.matcher(tempLineForCSV);
+                //increasing numberOfMatch until it finds
+                int numberOfMatch = 0;
+                while(matcher.find()) {
+                    numberOfMatch++;
+                }
+                //in case of 4 ';' in 1 row, throws RuntimeException
+                if(numberOfMatch == 4) {
+                    throw new RuntimeException();
+                }
                 //String array, to store data about the person
                 String[] personDataArrayForCSV = tempLineForCSV.split(";") ;
                 //need to parse the birthDateForCSV from String, to Date
@@ -95,7 +113,7 @@ public class PersonListLoader {
             for(int i = 0; i < personList.size(); i++) {
                 if(fileFormat.equals(PersonFileFormat.CSV)) {
                     out.write(personList.get(i).getName() + ";" + personList.get(i).getBirthday() + ";" +
-                    personList.get(i).getMothersName() + ";" + personList.get(i).getAddress());
+                    personList.get(i).getMothersName() + ";" + personList.get(i).getAddress() + "\n");
                 } else if(fileFormat.equals(PersonFileFormat.ONE_DATA_PER_LINE)) {
                     out.write(personList.get(i).getName() + "\n" + personList.get(i).getBirthday() + "\n" +
                             personList.get(i).getMothersName() + "\n" + personList.get(i).getAddress() + "\n");

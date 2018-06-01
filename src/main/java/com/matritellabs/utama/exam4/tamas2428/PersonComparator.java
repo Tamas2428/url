@@ -2,6 +2,9 @@ package com.matritellabs.utama.exam4.tamas2428;
 
 import java.util.Comparator;
 
+/**
+ * This class implements Comparator and overrided according to birthday, name and mothersname.
+ */
 public class PersonComparator implements Comparator {
 
 

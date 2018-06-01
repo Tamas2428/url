@@ -2,6 +2,9 @@ package com.matritellabs.utama.exam4.tamas2428;
 
 import java.util.Date;
 
+/**
+ * This class represent a Person, with 4 fields: name, birthday, mothersname, and address.
+ */
 public class Person {
     //private fields for the class
     private String name;
