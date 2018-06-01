@@ -37,32 +37,33 @@ public class PersonListLoader {
             URL fileAddress = new URL(fileURL);
             BufferedReader fileContentIn = new BufferedReader(new InputStreamReader(fileAddress.openStream()));
 
-            //Throw a java.io.FileNotFoundException if the file cannot be found!
+/*            //Throw a java.io.FileNotFoundException if the file cannot be found!
             HttpURLConnection con = (HttpURLConnection)(fileAddress).openConnection();
             //in case of no response, getResponseCode() returns -1, when we throw the exception
             if(con.getResponseCode() == -1) {
                 throw new FileNotFoundException();
-            }
+            }*/
+
+            int iteratorForArrayIndexCSV = 0;
 
             if(fileFormat.equals(PersonFileFormat.ONE_DATA_PER_LINE)) {
                 //temporary String to avoid any skip due to multiple calls in 1 cycle
                 String tempLineForOneDataLine = null;
                 //Iterator for String array index, and the String array, to store data about the person
-                int iteratorForArrayIndex = 0;
-                String[] personDataArrayForOneDataLine = new String[iteratorForArrayIndex+3];
-                while((tempLineForOneDataLine = fileContentIn.readLine()) != null || iteratorForArrayIndex % iteratorForArrayIndex+4 == 0) {
-                    personDataArrayForOneDataLine[iteratorForArrayIndex] = tempLineForOneDataLine;
-                    iteratorForArrayIndex++;
+                String[] personDataArrayForOneDataLine = new String[iteratorForArrayIndexCSV+3];
+                while((tempLineForOneDataLine = fileContentIn.readLine()) != null || iteratorForArrayIndexCSV % iteratorForArrayIndexCSV+4 == 0) {
+                    personDataArrayForOneDataLine[iteratorForArrayIndexCSV] = tempLineForOneDataLine;
+                    iteratorForArrayIndexCSV++;
                 }
                 //have to increase to 5, to keep separately the Persons, and be able to write more than 1 only
-                iteratorForArrayIndex++;
+                iteratorForArrayIndexCSV++;
                 //need to parse the birthDate from String, to Date
-                DateFormat dateForm = new SimpleDateFormat(personDataArrayForOneDataLine[iteratorForArrayIndex+1]);
-                Date birthDate = dateForm.parse(personDataArrayForOneDataLine[iteratorForArrayIndex+1]);
-                listToReturn.add(new Person(personDataArrayForOneDataLine[iteratorForArrayIndex],
+                DateFormat dateForm = new SimpleDateFormat(personDataArrayForOneDataLine[iteratorForArrayIndexCSV+1]);
+                Date birthDate = dateForm.parse(personDataArrayForOneDataLine[iteratorForArrayIndexCSV+1]);
+                listToReturn.add(new Person(personDataArrayForOneDataLine[iteratorForArrayIndexCSV],
                         birthDate,
-                        personDataArrayForOneDataLine[iteratorForArrayIndex+2],
-                        personDataArrayForOneDataLine[iteratorForArrayIndex+3]));
+                        personDataArrayForOneDataLine[iteratorForArrayIndexCSV+2],
+                        personDataArrayForOneDataLine[iteratorForArrayIndexCSV+3]));
                 logger.info("New person added to the List of persons with One data per line format");
 
                 //else part in case of CSV files, semicolon separation
