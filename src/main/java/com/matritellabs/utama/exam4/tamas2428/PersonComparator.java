@@ -10,6 +10,7 @@ public class PersonComparator implements Comparator {
 
     /**
      * Compares Person objects based on birth date. If it is the same, it uses name to decide, or mothers name.
+     * @return 0 in case equality, 1 other case
      */
     @Override
     public int compare(Object o1, Object o2) {
