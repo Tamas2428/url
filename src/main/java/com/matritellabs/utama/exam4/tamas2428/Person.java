@@ -62,4 +62,14 @@ public class Person {
             return false;
         }
     }
+
+    @Override
+    public int hashCode() {
+        int newHash = 19;
+        newHash = 33 * newHash + name.hashCode();
+        newHash = 33 * newHash + mothersName.hashCode();
+        newHash = 33 * newHash + address.hashCode();
+        newHash = 33 * newHash + birthday.hashCode();
+        return newHash;
+    }
 }
